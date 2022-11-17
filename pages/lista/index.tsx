@@ -1,12 +1,12 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 const Lista = () => {
-  const [cart, setCart] = useState([] as any);
-  const [category, setCategory] = useState<any>();
+  const [categoryTitle, setCategoryTitle] = useState<any>();
   const [sub, setSub] = useState<any>();
   const [search, setSearch] = useState("");
-  const categoryRef = useRef<any>(null);
-  const subRef = useRef<any>(null);
+  const [productResponse, setProductResponse] = useState({});
+  const [quantity, setQuantity] = useState(0);
+  const [cart, setCart] = useState({})
 
   interface Data {
     id: number;
@@ -16,13 +16,23 @@ const Lista = () => {
   useEffect(() => {
     handleCategoryData();
     handleSubData();
-    handleSearch();
+    handleResponse();
   }, []);
+
+  const handleClick1 = (event) => {
+    event.preventDefault();
+    setQuantity(quantity + 1);
+  };
+
+  const handleClick2 = (event) => {
+    event.preventDefault();
+    setQuantity(quantity - 1);
+  };
 
   async function handleCategoryData() {
     const response = await fetch("/api/category");
-    const category = await response.json();
-    setCategory(category);
+    const categoryTitle = await response.json();
+    setCategoryTitle(categoryTitle);
   }
 
   async function handleSubData() {
@@ -31,23 +41,55 @@ const Lista = () => {
     setSub(sub);
   }
 
-  async function handleSearch() {
+  async function handleResponse() {
     const response = await fetch("/api/product");
-    const search = await response.json();
-    setSearch(search);
+    const resToJson = await response.json();
+    setProductResponse(resToJson);
   }
 
-  const handleSubmit = (event: any, category: string, sub: number) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
-    const itemObject = { category, sub };
-    setCart([...cart, itemObject]);
-    console.log(subRef.current.value);
-    console.log(itemObject);
+    
+
+    const categoryTitle = event.target[0].value;
+    const sub = event.target[1].value;
+    const name = [event.target[2].value];
+    const type = event.target[3].value == "Unidade" ? "unit" : "kg";
+    const price = event.target[4].value;
+    const counter = event.target[5].value;
+    //const img = event.target[6].value;
+    const res = await fetch("../api/list", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        products: [
+          {
+            categoryTitle,
+            sub,
+            name,
+            type,
+            price,
+            quantity,
+          },
+        ],
+      }),
+    });
+    const response = await res.json();
+    console.log(response);
+    // return JSON.stringify(response);
+    setCart(response)
+    console.log(cart);
   };
 
-  if (!category) return <p>Loading</p>;
+
+
+  
+
+  if (!categoryTitle) return <p>Loading</p>;
   if (!sub) return <p>Loading</p>;
-  if (!search) return <p>Loading</p>;
+  if (!productResponse) return <p>Loading</p>;
 
   return (
     <>
@@ -63,6 +105,7 @@ const Lista = () => {
             </div>
             <div className="listText">
               <p>Lista</p>
+              {/* <p>{[cart.id]}</p> */}
               <p>0 categorias / 0 itens</p>
             </div>
           </div>
@@ -70,20 +113,15 @@ const Lista = () => {
             <div className="inputs">
               <div>
                 <label>Selecione categoria do produto</label>
-                <select
-                  className="categorySelect"
-                  required
-                  autoFocus
-                  ref={categoryRef}
-                >
-                  {category.map((item: Data) => (
+                <select className="categorySelect" required autoFocus>
+                  {categoryTitle.map((item: Data) => (
                     <option key={item.id}>{item.title}</option>
                   ))}
                 </select>
               </div>
               <div>
                 <label>Selecione uma subcategoria do produto</label>
-                <select className="categorySelect" required ref={subRef}>
+                <select className="categorySelect" required>
                   {sub.map((item: Data) => (
                     <option key={item.id}>{item.title}</option>
                   ))}
@@ -97,17 +135,20 @@ const Lista = () => {
                   placeholder="e.g Milho verde em conserva"
                 />
                 <div>
-                  {/* {search
-                  .filter((item) => {
-                    return search.toLowerCase() === ""
-                      ? null
-                      : item.name.toLowerCase().includes(search);
-                  })
-                  .map((item) => (
-                    <div key={item.id}>
-                      <h1>{item.name}</h1>
-                    </div>
-                  ))} */}
+                  {Object.values(productResponse)
+                    .filter((item) => {
+                      return search.toLowerCase() === ""
+                        ? null
+                        : item.name.toLowerCase().includes(search);
+                    })
+                    .map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => setProductResponse(productResponse)}
+                      >
+                        <h1>{item.name}</h1>
+                      </div>
+                    ))}
                 </div>
               </div>
             </div>
@@ -124,13 +165,17 @@ const Lista = () => {
                 <input required placeholder="R$" />
               </div>
               <div className="quantidade">
-                <button>-</button>
-                <p>1</p>
-                <button>+</button>
+                <button onClick={handleClick2}>-</button>
+                <div>{quantity}</div>
+                <button onClick={handleClick1}>+</button>
               </div>
             </div>
             <div className="importContainer">
               <img src="/Icons.png" />
+              <div>
+                <p>Arraste o arquivo ou clique aqui para selecionar</p>
+                <p>PNG, GIF ou JPEG. Tamanho máximo de arquivo 1Mb.</p>
+              </div>
             </div>
             <button className="addItem" type="submit">
               Adicionar item

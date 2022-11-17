@@ -72,6 +72,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
           throw new Error("É obrigatório enviar algum produto");
         }
 
+        console.log(req.body); //debugg
+
         const body: Data = {
           id: Math.floor(Math.random() * 900000),
           products: [],
@@ -95,8 +97,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
           }
 
           if (!product.quantity) {
-            throw new Error("A quantidade do produto é obrigatório");
-          }
+           throw new Error("A quantidade do produto é obrigatório");
+         }
 
           if (product.price < 0) {
             throw new Error(

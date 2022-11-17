@@ -109,7 +109,6 @@ input {
 .finalInputs input{
     min-width: 30%;
     padding: .5em;
-    border-radius: 15px solid black;
 }
 
 
@@ -121,7 +120,6 @@ input {
 .tipo select {
     min-width: 30%;
     padding: .5em;
-    border-radius: 15px solid black;
 }
 
 .quantidade {
@@ -148,4 +146,14 @@ input {
     min-width: 100%;
     padding: 1em;
     border-radius: 15px solid black;
+}
+
+.importContainer{
+    outline: 1px solid gray;
+    border-radius: .5em;
+    display: flex;
+    justify-content: center;
+    padding: 1em;
+    font-size: .6em;
+    gap: 1.5em;
 }
