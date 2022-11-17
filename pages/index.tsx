@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 
+
 const Home: NextPage = () => {
   return (
     <div>
@@ -25,17 +26,10 @@ const Home: NextPage = () => {
         </span>
         <Link href="/lista">
           <button className="createBtn">
-            <p
-              style={{
-                width: "183px",
-                height: "21px",
-                color: "#ED1B49",
-                fontSize: "14px",
-                fontWeight: 700,
-              }}
-            >
-              Criar uma lista de compras
-            </p>
+            <div className="plusContainer">
+              <img src="/plus.png" />
+            </div>
+            <p>Criar uma lista de compras</p>
           </button>
         </Link>
       </main>
