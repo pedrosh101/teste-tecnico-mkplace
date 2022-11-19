@@ -1,9 +1,12 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
-
+import { useContext } from "react";
+import { CartContext } from "../contexts/CartContext/index";
 
 const Home: NextPage = () => {
+  const { cart }: any = useContext(CartContext);
+
   return (
     <div>
       <main
@@ -16,7 +19,7 @@ const Home: NextPage = () => {
           alignItems: "center",
         }}
       >
-        <span style={{ marginBottom: 2 }}>
+        <span style={{ marginBottom: 30 }}>
           <Image
             src="/logo-mkplace.png"
             alt="Mkplace Logo"
@@ -24,6 +27,22 @@ const Home: NextPage = () => {
             height={35}
           />
         </span>
+        {!(Object.keys(cart).length === 0) && (
+          <Link href="/listacriada">
+            <div className="cartContainer">
+              <div className="listMain">
+                <div className="paperContainer">
+                  <img src="/Paper.png" />
+                </div>
+                <div className="listText">
+                  <p>Lista {[cart.id]}</p>
+                  <p className="countInfo">categorias / itens</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+        )}
+
         <Link href="/lista">
           <button className="createBtn">
             <div className="plusContainer">

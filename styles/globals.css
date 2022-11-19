@@ -17,24 +17,38 @@ section {
     min-height: 100vh;
     min-width: 100vw;
     padding: 3em;
-    font-size: 1.5em;
+    font-size: 1.3em;
+    font-weight: 500;
 }
 
 input {
     min-width: 100%;
+    border-radius: 8px;
+    color: gray;
+    border: 2px solid var(--clr3);
+    font-size: .8em;
+    font-weight: 500;
+    padding: .8em;
+}
+
+select {
+    border-radius: 8px;
+    border: 2px solid var(--clr3);
+    font-weight: 500;
+    font-size: .8em;
 }
 
 
 /* tela 1 - landing page*/
 
 .createBtn {
-    width: 315px;
+    width: 288px;
     height: 72px;
     background: var(--clr3);
     mix-blend-mode: normal;
     border: 1px solid #ED1B49;
     border-radius: 10px;
-    margin: 2em 0;
+    margin: 1em 0;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -74,22 +88,46 @@ input {
     margin-top: 2em;
 }
 
-.cartContainer{
-    outline: 1px solid gray;
+.cartContainer {
+    outline: 3px solid var(--clr3);
+    border-radius: 0.5em;
     display: flex;
-
+    flex-direction: column;
+    height: fit-content;
+    padding: .5em;
+    width: 288px;
+    font-weight: 700;
+    cursor: pointer;
 }
 
-.paperContainer{
+.listMain {
+    display: flex;
+}
+
+.paperContainer {
     background-color: #F1F5F5;
+    padding: .8em 1.1em;
+    border-radius: 10px;
+    margin-right: 1em;
 }
 
+.listText {
+    padding: 0 3em 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.countInfo {
+    font-size: .7em;
+    color: gray;
+}
 
 .formContainer {
     display: flex;
     flex-direction: column;
     gap: 1em;
-    outline: 1px solid gray;
+    outline: 3px solid var(--clr3);
     border-radius: 1em;
     padding: 2em;
 }
@@ -98,6 +136,20 @@ input {
     display: flex;
     flex-direction: column;
     gap: 1em;
+
+}
+
+.inputs select {
+    margin-top: 1em;
+    color: gray;
+}
+
+.suggestions {
+    cursor: pointer;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    border-bottom: 1px solid gray;
+    font-size: 1em;
 }
 
 .finalInputs {
@@ -106,11 +158,10 @@ input {
     gap: 1em;
 }
 
-.finalInputs input{
+.finalInputs input {
     min-width: 30%;
     padding: .5em;
 }
-
 
 .tipo {
     display: flex;
@@ -119,18 +170,22 @@ input {
 
 .tipo select {
     min-width: 30%;
-    padding: .5em;
+    padding: .5em 8em .5em 0;
 }
 
 .quantidade {
     display: flex;
-    gap: .5em;
-
+    align-items: center;
+    gap: 1.5em;
+    outline: 2px solid var(--clr3);
+    border-radius: .5em;
+    padding: 0 1em;
 }
 
 .quantidade button {
-    width: 2em;
-    height: 2em;
+    background-color: transparent;
+    border: none;
+    font-size: 1.5em;
 }
 
 .addItem {
@@ -140,6 +195,21 @@ input {
     height: 3em;
     border-radius: .5em;
     border: none;
+    font-size: .7em;
+    font-weight: 600;
+}
+
+.concluirLista {
+    background-color: var(--clr3);
+    color: var(--clr2);
+    margin-top: 1em;
+    width: 20em;
+    height: 3em;
+    border-radius: .5em;
+    border: 2px solid var(--clr2);
+    font-size: .7em;
+    font-weight: 700;
+    cursor: pointer;
 }
 
 .categorySelect {
@@ -148,7 +218,7 @@ input {
     border-radius: 15px solid black;
 }
 
-.importContainer{
+.importContainer {
     outline: 1px solid gray;
     border-radius: .5em;
     display: flex;
@@ -156,4 +226,70 @@ input {
     padding: 1em;
     font-size: .6em;
     gap: 1.5em;
+}
+
+/* listacriada */
+
+.itemCart {
+    display: flex;
+}
+
+
+.cartItemText {
+    display: flex;
+    justify-content: space-between;
+    width: 25em;
+    padding: 0 1em;
+}
+
+
+@media all and (max-width: 50em) {
+    section {
+        padding: 1em;
+    }
+
+    .header img {
+        display: none;
+    }
+
+    .listsContainer {
+        flex-direction: column-reverse;
+    }
+
+    .finalInputs {
+        display: grid;
+        align-items: center;
+    }
+
+    .formContainer {
+        padding: 0em;
+        outline: none;
+        font-size: .8em;
+    }
+
+    .quantidade{
+        width:fit-content;
+    }
+
+    .tipo label{
+        padding-bottom: .5em;
+    }
+
+    .importContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .importContainer img {
+        height: 4em;
+        width: 5em;
+    }
+
+    .addItem{
+        width: 100%;
+    }
+
+    .cartContainer{
+        width: 100%;
+    }
 }

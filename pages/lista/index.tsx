@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState, useContext } from "react";
+import { CartContext } from "../../contexts/CartContext/index";
 
 const Lista = () => {
   const [categoryTitle, setCategoryTitle] = useState<any>();
   const [sub, setSub] = useState<any>();
   const [search, setSearch] = useState("");
   const [productResponse, setProductResponse] = useState({});
-  const [quantity, setQuantity] = useState(0);
-  const [cart, setCart] = useState({})
+  const [suggestions, setSuggestions] = useState([]);
+
+  const { cart, setCart, quantity, handleClick1, handleClick2 }: any =
+    useContext(CartContext);
 
   interface Data {
     id: number;
@@ -18,16 +22,6 @@ const Lista = () => {
     handleSubData();
     handleResponse();
   }, []);
-
-  const handleClick1 = (event) => {
-    event.preventDefault();
-    setQuantity(quantity + 1);
-  };
-
-  const handleClick2 = (event) => {
-    event.preventDefault();
-    setQuantity(quantity - 1);
-  };
 
   async function handleCategoryData() {
     const response = await fetch("/api/category");
@@ -47,9 +41,13 @@ const Lista = () => {
     setProductResponse(resToJson);
   }
 
+  const onSuggestHandler = (search) => {
+    setSearch(search);
+    setSuggestions([]);
+  };
+
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    
 
     const categoryTitle = event.target[0].value;
     const sub = event.target[1].value;
@@ -77,15 +75,9 @@ const Lista = () => {
       }),
     });
     const response = await res.json();
-    console.log(response);
-    // return JSON.stringify(response);
-    setCart(response)
+    setCart(response);
     console.log(cart);
   };
-
-
-
-  
 
   if (!categoryTitle) return <p>Loading</p>;
   if (!sub) return <p>Loading</p>;
@@ -95,19 +87,33 @@ const Lista = () => {
     <>
       <section>
         <div className="header">
-          <img src="/favicon-mkplace.ico" />
+          <Link href="/">
+            <img src="/favicon-mkplace.ico" />
+          </Link>
+          <img src="/Arrow Left.png" />
           <h1>Criando Lista de Compras</h1>
         </div>
         <div className="listsContainer">
-          <div className="cartContainer">
-            <div className="paperContainer">
-              <img src="/Paper.png" />
+          <div>
+            <div className="cartContainer">
+              <div className="listMain">
+                <div className="paperContainer">
+                  <img src="/Paper.png" />
+                </div>
+                <div className="listText">
+                  <p>Lista {[cart.id]}</p>
+                  <p className="countInfo">
+                    {" "}
+                    {[cart.categoryTitle]} categorias / itens
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="listText">
-              <p>Lista</p>
-              {/* <p>{[cart.id]}</p> */}
-              <p>0 categorias / 0 itens</p>
-            </div>
+            {!(Object.keys(cart).length === 0) && (
+              <Link href="/">
+                <button className="concluirLista">Concluir lista</button>
+              </Link>
+            )}
           </div>
           <form className="formContainer" onSubmit={handleSubmit}>
             <div className="inputs">
@@ -133,6 +139,7 @@ const Lista = () => {
                   required
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="e.g Milho verde em conserva"
+                  type="text"
                 />
                 <div>
                   {Object.values(productResponse)
@@ -144,9 +151,9 @@ const Lista = () => {
                     .map((item) => (
                       <div
                         key={item.id}
-                        onClick={() => setProductResponse(productResponse)}
+                        onClick={() => onSuggestHandler(item.name)}
                       >
-                        <h1>{item.name}</h1>
+                        <h1 className="suggestions">{item.name}</h1>
                       </div>
                     ))}
                 </div>
@@ -164,10 +171,13 @@ const Lista = () => {
                 <label>Preço</label>
                 <input required placeholder="R$" />
               </div>
-              <div className="quantidade">
-                <button onClick={handleClick2}>-</button>
-                <div>{quantity}</div>
-                <button onClick={handleClick1}>+</button>
+              <div className="tipo">
+                <label>Quantidade</label>
+                <div className="quantidade">
+                  <button onClick={handleClick2}>-</button>
+                  <div>{quantity}</div>
+                  <button onClick={handleClick1}>+</button>
+                </div>
               </div>
             </div>
             <div className="importContainer">
